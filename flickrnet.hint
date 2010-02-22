@@ -1,0 +1,6 @@
+category: DotNET
+sdesc: ".NET library for Flickr (sources)"
+ldesc: "The Flickr.Net API is a .Net Library for accessing the Flickr 
+API. Written entirely in C# it can be accessed from with any .Net 
+language in .Net Framework 1.1, .Net Framework 2.0, .Net Compact 
+Framework 2.0 and Mono."

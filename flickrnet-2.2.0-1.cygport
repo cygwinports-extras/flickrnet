@@ -1,0 +1,42 @@
+ORIG_PN="libflickrnet"
+inherit mono
+
+DESCRIPTION=".NET library for Flickr"
+HOMEPAGE="http://flickrnet.codeplex.com/"
+SRC_URI="mirror://debian/pool/main/libf/${ORIG_PN}/${ORIG_PN}_${PV}.orig.tar.gz"
+SRC_DIR="${ORIG_PN}-48055~${PV}"
+
+PATCH_URI="
+	http://patch-tracker.debian.org/patch/series/dl/${ORIG_PN}/1:2.2.0-3/AssemblyInfo.diff
+	http://patch-tracker.debian.org/patch/series/dl/${ORIG_PN}/1:2.2.0-3/unbreak-zooomr-support.diff
+"
+
+PKG_NAMES="${PN} mono-FlickrNet2.2"
+mono_FlickrNet2_2_CONTENTS="usr/"
+
+src_compile() {
+	lndirs
+	cd ${B}/FlickrNet
+	${GMCS} -nowarn:0618 -target:library -out:FlickrNet.dll -r:System.Web.dll *.cs
+
+	# required for gnome-do-plugins
+	cat > flickrnet.pc <<_EOF
+prefix=/usr
+libdir=\${prefix}/lib
+
+Name: flickrnet
+Description: Flickr.Net API Library
+Version: ${PV}
+Libs: -r:\${libdir}/mono/flickrnet/FlickrNet.dll
+_EOF
+}
+
+src_install() {
+	cd ${B}/FlickrNet
+	gacinto ${PN}
+	dogac FlickrNet.dll
+
+	insinto /usr/lib/pkgconfig
+	doins flickrnet.pc
+}
+DOCS="FlickrNet/License.txt"
